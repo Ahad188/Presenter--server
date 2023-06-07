@@ -27,12 +27,29 @@ async function run() {
     await client.connect();
     const classCollection = client.db('SummarDB').collection('classes')
     const teachersCollection = client.db('SummarDB').collection('teachers')
+    const myclassCollection = client.db('SummarDB').collection('my-class')
 
 //     get all class here
     app.get('/classes',async (req,res)=>{
      const result = await classCollection.find().toArray()
      res.send(result)
     })
+
+// my-class api create
+app.get('/my-class', async(req,res)=>{
+     const email = req.query.email;
+     if(!email){
+          return res.send([])
+     }
+     const query = {email : email};
+     const result = await myclassCollection.find().toArray()
+     res.send(result)
+})
+app.post('/my-class',async(req,res)=>{
+     const item = req.body;
+     const result = await myclassCollection.insertOne(item)
+     res.send(result);
+})
 
 //  get all teacher here
     app.get('/teachers', async(req,res)=>{
