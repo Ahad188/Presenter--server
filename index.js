@@ -55,9 +55,19 @@ async function run() {
      const token = jwt.sign(user, process.env.Access_TOKEN, { expiresIn: '1h' })
      res.send({token})
 })
+// verifyAdmin middle ware
+     const verifyAdmin = async(req,res,next)=>{
+          const email = req.decoded.email;
+          const query = {email : email}
+          const user = await usersCollection.findOne(query)
+          if(user.role !== 'admin'){
+             return  res.status(403).send({error:true, message: "Forbidden message"})
+          }
+          next();
+     }
 
 //     user api
-     app.get('/users', async(req,res)=>{
+     app.get('/users',verifyJWT,verifyAdmin, async(req,res)=>{
           const result = await usersCollection.find().toArray()
           res.send(result)
      })
