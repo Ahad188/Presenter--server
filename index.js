@@ -1,4 +1,4 @@
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const express = require('express');
 const app = express();
 const cors = require('cors');
@@ -50,6 +50,14 @@ app.post('/my-class',async(req,res)=>{
      const result = await myclassCollection.insertOne(item)
      res.send(result);
 })
+app.delete('/my-class/:id', async(req,res)=>{
+     const id = req.params.id;
+     const query = {_id : new ObjectId(id)};
+     const result = await myclassCollection.deleteOne(query);
+     // console.log(result);
+     res.send(result)
+})
+
 
 //  get all teacher here
     app.get('/teachers', async(req,res)=>{
