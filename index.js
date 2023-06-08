@@ -25,9 +25,22 @@ async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
+    const usersCollection = client.db('SummarDB').collection('users')
     const classCollection = client.db('SummarDB').collection('classes')
     const teachersCollection = client.db('SummarDB').collection('teachers')
     const myclassCollection = client.db('SummarDB').collection('my-class')
+
+//     user api
+     app.post('/users', async(req,res)=>{
+          const user = req.body;
+          const query = {email : user.email}
+          const existingUser = await usersCollection.findOne(query)
+          if(existingUser){
+               return res.send({message:"User already exists"})
+          }
+          const result = await usersCollection.insertOne(user)
+          res.send(result);
+     })
 
 //     get all class here
     app.get('/classes',async (req,res)=>{
