@@ -42,7 +42,7 @@ app.get('/my-class', async(req,res)=>{
           return res.send([])
      }
      const query = {email : email};
-     const result = await myclassCollection.find().toArray()
+     const result = await myclassCollection.find(query).toArray()
      res.send(result)
 })
 app.post('/my-class',async(req,res)=>{
