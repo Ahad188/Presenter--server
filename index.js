@@ -1,6 +1,7 @@
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const express = require('express');
 const app = express();
+const jwt = require('jsonwebtoken');
 const cors = require('cors');
 require('dotenv').config()
 const port = process.env.PORT || 5000;
@@ -29,6 +30,13 @@ async function run() {
     const classCollection = client.db('SummarDB').collection('classes')
     const teachersCollection = client.db('SummarDB').collection('teachers')
     const myclassCollection = client.db('SummarDB').collection('my-class')
+
+//     JWT API
+    app.post('/jwt', (req,res)=>{
+     const user = req.body;
+     const token = jwt.sign(user, process.env.Access_TOKEN, { expiresIn: '1h' })
+     res.send({token})
+})
 
 //     user api
      app.get('/users', async(req,res)=>{
