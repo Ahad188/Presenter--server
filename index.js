@@ -31,6 +31,11 @@ async function run() {
     const myclassCollection = client.db('SummarDB').collection('my-class')
 
 //     user api
+     app.get('/users', async(req,res)=>{
+          const result = await usersCollection.find().toArray()
+          res.send(result)
+     })
+
      app.post('/users', async(req,res)=>{
           const user = req.body;
           const query = {email : user.email}
