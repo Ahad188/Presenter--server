@@ -121,6 +121,12 @@ async function run() {
      const result = await classCollection.insertOne(newClass)
      res.send(result)
     })
+    app.delete('/classes/:id',verifyJWT,verifyAdmin, async(req,res)=>{
+     const id = req.params.id;
+     const query = {_id : new ObjectId(id)}
+     const result = await classCollection.deleteOne(query)
+     res.send(result)
+    })
 
 // my-class api create
 app.get('/my-class', verifyJWT, async(req,res)=>{
