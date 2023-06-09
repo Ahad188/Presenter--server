@@ -3,7 +3,8 @@ const express = require('express');
 const app = express();
 const jwt = require('jsonwebtoken');
 const cors = require('cors');
-require('dotenv').config()
+require('dotenv').config();
+const stripe = require('stripe')(process.env.PAYMENT_KEY)
 const port = process.env.PORT || 5000;
 
 // middleWare
@@ -48,6 +49,7 @@ async function run() {
     const classCollection = client.db('SummarDB').collection('classes')
     const teachersCollection = client.db('SummarDB').collection('teachers')
     const myclassCollection = client.db('SummarDB').collection('my-class')
+    const paymentsCollection = client.db('SummarDB').collection('payments')
 
 //     JWT API
     app.post('/jwt', (req,res)=>{
@@ -165,8 +167,32 @@ app.delete('/my-class/:id', async(req,res)=>{
     })
 
 
+    // create payment intent
+    app.post('/create-payment-intent',verifyJWT, async (req, res) => {
+     const { price } = req.body;
+     const amount = parseInt(price * 100);
+     const paymentIntent = await stripe.paymentIntents.create({
+       amount: amount,
+       currency: 'usd',
+       payment_method_types: ['card']
+     });
+
+     res.send({
+       clientSecret: paymentIntent.client_secret
+     })
+   })
 
 
+// payment post api 
+app.post('/payments', async(req,res)=>{
+     const payment = req.body;
+      const insertResult = await paymentsCollection.insertOne(payment);
+
+      const query = { _id: { $in: payment.cartItems.map(id => new ObjectId(id)) } }
+      const deleteResult = await myclassCollection.deleteMany(query)
+
+      res.send({insertResult, deleteResult})
+})
 
 
 
