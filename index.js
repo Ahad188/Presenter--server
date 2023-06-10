@@ -146,7 +146,7 @@ app.get('/my-class', verifyJWT, async(req,res)=>{
      const result = await myclassCollection.find(query).toArray()
      res.send(result)
 })
-app.post('/my-class',async(req,res)=>{
+app.post('/my-class', verifyJWT,verifyAdmin,async(req,res)=>{
      const item = req.body;
      const result = await myclassCollection.insertOne(item)
      res.send(result);
@@ -161,9 +161,14 @@ app.delete('/my-class/:id', async(req,res)=>{
 
 
 //  get all teacher here
-    app.get('/teachers', async(req,res)=>{
+    app.get('/teachers',verifyJWT,verifyAdmin, async(req,res)=>{
      const result = await teachersCollection.find().toArray()
      res.send(result)
+    })
+    app.post('/teachers', async(req,res)=>{
+          const newTeacher = req.body;
+          const result = await teachersCollection.insertOne(newTeacher)
+          res.send(result)
     })
 
 
