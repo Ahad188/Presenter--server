@@ -108,6 +108,12 @@ async function run() {
           const result = await usersCollection.updateOne(filter,updateDoc)
           res.send(result);
      })
+     // app.delete('/users/:id', verifyJWT,verifyAdmin, async(req,res)=>{
+     //      const id = req.params.id;
+     //      const query = {_id: new ObjectId(id)}
+     //      const result = await usersCollection.deleteOne(query)
+     //      res.send(result)
+     // })
 
 
 
@@ -146,7 +152,7 @@ app.get('/my-class', verifyJWT, async(req,res)=>{
      const result = await myclassCollection.find(query).toArray()
      res.send(result)
 })
-app.post('/my-class', verifyJWT,verifyAdmin,async(req,res)=>{
+app.post('/my-class',async(req,res)=>{
      const item = req.body;
      const result = await myclassCollection.insertOne(item)
      res.send(result);
@@ -161,7 +167,7 @@ app.delete('/my-class/:id',verifyJWT,verifyAdmin, async(req,res)=>{
 
 
 //  get all teacher here
-    app.get('/teachers',verifyJWT,verifyAdmin, async(req,res)=>{
+    app.get('/teachers', async(req,res)=>{
      const result = await teachersCollection.find().toArray()
      res.send(result)
     })
