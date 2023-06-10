@@ -117,8 +117,6 @@ async function run() {
 
 
 
-
-
 //     get all class here
     app.get('/classes',async (req,res)=>{
      const result = await classCollection.find().toArray()
@@ -211,13 +209,6 @@ app.post('/payments', async(req,res)=>{
       res.send({insertResult, deleteResult})
 })
 
-
-
-
-
-
-
-
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
@@ -227,25 +218,6 @@ app.post('/payments', async(req,res)=>{
   }
 }
 run().catch(console.dir);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 app.get('/', (req,res)=>{
      res.send(' Are you ready to  Presenter in this vacation ')
