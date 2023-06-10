@@ -151,7 +151,7 @@ app.post('/my-class', verifyJWT,verifyAdmin,async(req,res)=>{
      const result = await myclassCollection.insertOne(item)
      res.send(result);
 })
-app.delete('/my-class/:id', async(req,res)=>{
+app.delete('/my-class/:id',verifyJWT,verifyAdmin, async(req,res)=>{
      const id = req.params.id;
      const query = {_id : new ObjectId(id)};
      const result = await myclassCollection.deleteOne(query);
@@ -168,6 +168,12 @@ app.delete('/my-class/:id', async(req,res)=>{
     app.post('/teachers', async(req,res)=>{
           const newTeacher = req.body;
           const result = await teachersCollection.insertOne(newTeacher)
+          res.send(result)
+    })
+    app.delete('/teachers/:id',verifyJWT,verifyAdmin, async(req,res)=>{
+          const id = req.params.id;
+          const query= {_id : new ObjectId(id)}
+          const result = await teachersCollection.deleteOne(query)
           res.send(result)
     })
 
