@@ -8,21 +8,31 @@ const stripe = require('stripe')(process.env.PAYMENT_KEY)
 const port = process.env.PORT || 5000;
 
 // middleWare
-app.use(cors())
+// app.use(cors())
+const corsOptions ={
+     origin:'*', 
+     credentials:true,
+     optionSuccessStatus:200,
+  }
+  
+  app.use(cors(corsOptions))
 app.use(express.json())
 
 // verify jwt function
 const verifyJWT = (req, res, next) => {
      const authorization = req.headers.authorization;
+     console.log(authorization);
      if (!authorization) {
-       return res.status(401).send({ error: true, message: 'unauthorized access' });
+       return res.status(401).send({ error: true, message: 'jwt not found access' });
      }
      // bearer token
      const token = authorization.split(' ')[1];
    
-     jwt.verify(token, process.env.Access_Token, (err, decoded) => {
+     jwt.verify(token, process.env.Access_TOKEN, (err, decoded) => {
        if (err) {
-         return res.status(401).send({ error: true, message: 'unauthorized access' })
+          console.log(err);
+
+         return res.status(401).send({ error: true, message: 'unauthorized 20202 access' })
        }
        req.decoded = decoded;
        next();
@@ -44,7 +54,7 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+//     await client.connect();
     const usersCollection = client.db('SummarDB').collection('users')
     const classCollection = client.db('SummarDB').collection('classes')
     const teachersCollection = client.db('SummarDB').collection('teachers')
@@ -210,7 +220,7 @@ app.post('/payments', async(req,res)=>{
 })
 
     // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
+//     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
     // Ensures that the client will close when you finish/error
